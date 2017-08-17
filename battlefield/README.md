@@ -7,4 +7,4 @@ Here we have a global variable owner which must be set to your name.
 
 To build this locally using docker, run
 
-    docker build --tag battlestar-variablica/battlefield .
+    docker build --tag battlestarvariablica/battlefield .

@@ -7,4 +7,4 @@ It restarts the battlefield when the fight is over.
 
 You can build it locally using docker:
 
-    docker build --tag battlestar-variablica/proxy .
+    docker build --tag battlestarvariablica/proxy .
