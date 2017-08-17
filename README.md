@@ -5,6 +5,8 @@ You get a terminal connection to your language and all you need to do is
 keep a variable "battlestar" at your name.
 But will you do better than your opponent?
 
+[Try it in your browser](https://coderdojopotsdam.github.io/battlestar-variablica/)
+
 ## Gameplay and Implementation
 
 The terminal is provided by [fTelnet][ftelnet].
@@ -23,7 +25,6 @@ the input and output and displays the statistics.
 
 Because we get the programs, we can let them play against eachother and as such
 rate the user and give the user a tutorial and bots to play against.
-
 
 
 
