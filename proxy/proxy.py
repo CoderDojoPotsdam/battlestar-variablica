@@ -237,7 +237,9 @@ class Player(object):
         
     def enter(self, game):
         self.game = game
-        self.print("\nJoining the game.. \n"\
+        self.print("\nYou can see the source code at\n"
+                   "\thttps://github.com/CoderDojoPotsdam/battlestar-variablica\n\n"
+                   "Joining the game.. \n"\
                    "Try to set the global variable \"owner\" to your name.\n"
                    "Call stats() to see the statistics.\n")
         game.add_player(self)
