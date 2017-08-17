@@ -5,6 +5,7 @@ from io import TextIOWrapper
 import sys
 import traceback
 import threading
+import random
 import subprocess
 import os
 import base64
@@ -17,6 +18,9 @@ import pty
 DO_NOT_PRINT = "# do not print"
 ID_LENGTH = 10
 PLAYER = "Player:"
+
+MIN_SECONDS_FOR_GAME = 300
+MAX_SECONDS_FOR_GAME = 600
 
 
 def random_string():
@@ -79,8 +83,8 @@ class Container(object):
                 i += len(PLAYER)
                 end = i + ID_LENGTH
                 id = codeoutput[i: end]
+                output = output.replace(output[:end], "")
                 if id in self._players:
-                    output = output.replace(output[:end], "")
                     self._players[id].print(output, end="")
                 else:
                     printf(output, end="")
@@ -91,14 +95,17 @@ class Container(object):
     def stop(self):
         with self._run_lock:
             if self._is_running:
-                self._is_running = False
                 try:
                     self._execute("_stats()", "GAME")
                     self._execute("exit()", "GAME")
+                    time.sleep(1)
                     subprocess.check_call(["docker", "stop", self._name],
                          stdout=subprocess.PIPE)
                 except:
                     traceback.print_exc()
+                finally:
+                    self._is_running = False
+
     
 class Round(object):
 
@@ -123,12 +130,13 @@ class Round(object):
 class Game(object):
     """One game which ends after a while."""
     
-    restart_after_seconds = 10
+    def restart_after_seconds(self):
+        return random.randint(MIN_SECONDS_FOR_GAME, MAX_SECONDS_FOR_GAME)
     
     def __init__(self):
         """Start the game, wait for it to stop and close it."""
         self._players = set()
-        self.start()
+        threading.Thread(target=self.start, deamon=True).start()
         
     # user interface
     
@@ -164,19 +172,29 @@ class Game(object):
         self.log("player left. {} players in game.".format(len(self._players)))
         
     def start(self):
-        self.log("Game starts.")
+        self.log("Game starts ...")
         self._round = Round(self)
+        self.log("3 - prepare your strategy")
+        time.sleep(1)
+        self.log("2 - stretch your fingers")
+        time.sleep(1)
+        self.log("1 - touch the keys")
+        time.sleep(1)
         self._round.start()
         self.start_restart_timer()
-        self.log("Game started.")
+        self.log("GO! - Set the global variable owner to your name!")
         
     def start_restart_timer(self):
-        timer = threading.Timer(self.restart_after_seconds, self.restart)
+        timer = threading.Timer(self.restart_after_seconds(), self.restart)
         timer.setDaemon(True)
         timer.start()
     
     def stop(self):
-        self.log("Game stops.")
+        self.log("30 seconds left.")
+        time.sleep(20)
+        self.log("10 seconds left.")
+        time.sleep(10)
+        self.log("Game stops ...")
         self._round.stop()
         self.log("Game stopped.")
         

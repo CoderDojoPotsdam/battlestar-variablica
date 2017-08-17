@@ -6,19 +6,22 @@ import sys
 
 owner = None
 
-def monitor(print=print):
+def monitor(print=print, stdout=sys.stdout, sorted=sorted):
     global _stats
     from time import sleep
     from sys import stdout
     names = {}
     def _stats(print=print):
-        for name, value in names.items():
-            print("{}:\t{}".format(name, value))
+        print("Currently leading and winning:")
+        for name, value in sorted(names.items(), key=lambda x: x[1], reverse=True):
+            print("{}:\t{}".format(name, value), file=stdout)
+            stdout.flush()
     while 1:
         try:
-            names.setdefault(owner, 0)
-            names[owner] += 1
-            sleep(0.0001)
+            if owner is not None:
+                names.setdefault(owner, 0)
+                names[owner] += 1
+            sleep(0.001)
         except:
            pass
 
@@ -26,8 +29,8 @@ def monitor(print=print):
 threading.Thread(target=monitor, daemon=True).start()
 del monitor, threading
 
-def main(input=input, repr=repr, exec=exec, KeyboardInterrupt=KeyboardInterrupt,
-         SystemExit=SystemExit, NameError=NameError, globals=globals(),
+def main(input=input, repr=repr, exec=exec, 
+         end=(KeyboardInterrupt, SystemExit), NameError=NameError, globals=globals(),
          print=print, __builtins__=__builtins__, map=map, str=str, stdout=sys.stdout,
          none=None):
     all_locals = {}
@@ -39,7 +42,10 @@ def main(input=input, repr=repr, exec=exec, KeyboardInterrupt=KeyboardInterrupt,
                     stdout.flush()
                 start = ""
                 while not start:
-                    start = input()
+                    try:
+                        start = input()
+                    except ValueError:
+                        return
                 id = start.split(None, 1)[0]
                 all_locals.setdefault(id, {
                     "__builtins__":__builtins__,
@@ -59,6 +65,8 @@ def main(input=input, repr=repr, exec=exec, KeyboardInterrupt=KeyboardInterrupt,
                     line = input()
                 try:
                     exec(code, globals, locals)
+                except end:
+                    return
                 except:
                     class F:
                         pass
@@ -66,8 +74,9 @@ def main(input=input, repr=repr, exec=exec, KeyboardInterrupt=KeyboardInterrupt,
                     f.write = lambda s: _print(s, end="")
                     print_exc(file=f)
                 _print(">>> ", end="")
-            except (KeyboardInterrupt, SystemExit):
-                break
+                stdout.flush()
+            except end:
+                return
             except:
                 try:
                     print_exc()
