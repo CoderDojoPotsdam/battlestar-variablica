@@ -37,8 +37,8 @@ def main(input=input, repr=repr, exec=exec,
     while 1:
         try:
             try:
-                def _print(*args, end="\n"):
-                    print("Player:" + id + " ".join(map(str, args)), end=end, file=stdout)
+                def _print(*args, end="\n", file=stdout):
+                    print("Player:" + id + " ".join(map(str, args)), end=end, file=file)
                     stdout.flush()
                 start = ""
                 while not start:
