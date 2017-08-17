@@ -186,7 +186,9 @@ class Game(object):
         self.log("GO! - Set the global variable owner to your name!")
         
     def start_restart_timer(self):
-        timer = threading.Timer(self.restart_after_seconds(), self.restart)
+        duration = self.restart_after_seconds()
+        self.log("The next game will last {} seconds.".format(duration))
+        timer = threading.Timer(duration, self.restart)
         timer.setDaemon(True)
         timer.start()
     
