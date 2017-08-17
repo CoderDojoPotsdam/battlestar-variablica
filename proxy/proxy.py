@@ -19,8 +19,8 @@ DO_NOT_PRINT = "# do not print"
 ID_LENGTH = 10
 PLAYER = "Player:"
 
-MIN_SECONDS_FOR_GAME = 300
-MAX_SECONDS_FOR_GAME = 600
+MIN_SECONDS_FOR_GAME = 30
+MAX_SECONDS_FOR_GAME = 200
 
 
 def random_string():
@@ -36,7 +36,8 @@ class Container(object):
         self._masterfd, self._slavefd = pty.openpty() # https://stackoverflow.com/questions/41542960/run-interactive-bash-with-popen-and-a-dedicated-tty-python
         self._process = subprocess.Popen(
             ["docker", "run", "--rm", "--interactive",
-             "--name", self._name,
+             "--name", self._name, "--network", "none",
+             "--memory", "200mb",
              "battlestar-variablica/battlefield"],
           #   ["python3", "-u", "../battlefield/battlefield.py"],
              stdin=self._slavefd, stderr=self._slavefd, 
@@ -136,7 +137,7 @@ class Game(object):
     def __init__(self):
         """Start the game, wait for it to stop and close it."""
         self._players = set()
-        threading.Thread(target=self.start, deamon=True).start()
+        threading.Thread(target=self.start, daemon=True).start()
         
     # user interface
     
@@ -163,13 +164,13 @@ class Game(object):
         
     def add_player(self, player):
         self._players.add(player)
-        self.log("player joined {} players in game.".format(len(self._players)))
+        self.log("A player joined. {} players are in the game.".format(len(self._players)))
         
     def remove_player(self, player):
         if player in self._players:
             self._players.remove(player)
             player.was_removed()
-        self.log("player left. {} players in game.".format(len(self._players)))
+        self.log("A player left. {} players are in the game.".format(len(self._players)))
         
     def start(self):
         self.log("Game starts ...")
