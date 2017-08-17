@@ -1,5 +1,8 @@
 # battlestar-variablica
 
+[![Docker Automated build](https://img.shields.io/docker/automated/battlestarvariablica/proxy.svg)](https://hub.docker.com/r/battlestarvariablica/proxy/builds/)
+[![Docker Automated build](https://img.shields.io/docker/automated/battlestarvariablica/battlefield.svg)](https://hub.docker.com/r/battlestarvariablica/battlefield/builds/)
+
 You know your programming language? Great!
 You get a terminal connection to your language and all you need to do is
 keep a variable "battlestar" at your name.
