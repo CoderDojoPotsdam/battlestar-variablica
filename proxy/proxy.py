@@ -22,7 +22,7 @@ PLAYER = "Player:"
 MIN_SECONDS_FOR_GAME = 30
 MAX_SECONDS_FOR_GAME = 200
 
-BATTLEFIELD_IMAGE = "battlestar-variablica/battlefield"
+BATTLEFIELD_IMAGE = "battlestarvariablica/battlefield"
 
 ignore_messages = ['WARNING: Your kernel does not support swap limit capabilities or the cgroup is not mounted. Memory limited without swap.']
 
