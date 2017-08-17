@@ -1,5 +1,10 @@
 FROM python:3
 
+ENV USER=root
+ENV HOME=/root
+
+RUN wget -O- https://get.docker.com | bash
+
 RUN mkdir /app
 WORKDIR /app
 

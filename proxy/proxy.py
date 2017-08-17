@@ -22,6 +22,8 @@ PLAYER = "Player:"
 MIN_SECONDS_FOR_GAME = 30
 MAX_SECONDS_FOR_GAME = 200
 
+BATTLEFIELD_IMAGE = "battlestar-variablica/battlefield"
+
 
 def random_string():
     return base64.b16encode(os.urandom(ID_LENGTH)).decode()[:ID_LENGTH]
@@ -38,7 +40,7 @@ class Container(object):
             ["docker", "run", "--rm", "--interactive",
              "--name", self._name, "--network", "none",
              "--memory", "200mb",
-             "battlestar-variablica/battlefield"],
+             BATTLEFIELD_IMAGE],
           #   ["python3", "-u", "../battlefield/battlefield.py"],
              stdin=self._slavefd, stderr=self._slavefd, 
              stdout=self._slavefd,
