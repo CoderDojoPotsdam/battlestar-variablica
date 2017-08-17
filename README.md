@@ -8,7 +8,13 @@ You get a terminal connection to your language and all you need to do is
 keep a variable "battlestar" at your name.
 But will you do better than your opponent?
 
-[Try it in your browser](https://coderdojopotsdam.github.io/battlestar-variablica/)
+- [Try it in your browser](https://coderdojopotsdam.github.io/battlestar-variablica/)
+- Try it on the command line:
+  ```
+  telnet variablica.quelltext.eu 2323
+  ```
+
+You will need another person to play it.
 
 ## Gameplay and Implementation
 
