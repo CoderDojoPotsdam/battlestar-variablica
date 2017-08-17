@@ -8,3 +8,9 @@ It restarts the battlefield when the fight is over.
 You can build it locally using docker:
 
     docker build --tag battlestarvariablica/proxy .
+    
+## RUN
+
+You can run is andmap the docker socket:
+
+    docker run --volume "/var/run/docker.sock:/var/run/docker.sock" battlestarvariablica/proxy

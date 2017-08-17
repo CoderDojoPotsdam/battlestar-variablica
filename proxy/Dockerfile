@@ -1,18 +1,18 @@
-FROM ubuntu
+FROM docker
 
 ENV USER=root
 ENV HOME=/root
-
-RUN wget -O- https://get.docker.com | bash
-RUNN apt-get install python3 python3-pip
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
 RUN mkdir /app
 WORKDIR /app
 
 EXPOSE 2323
 
-CMD ["python3", "-u", "proxy.py" "2323"]
+RUN apk add --update python3
+
+RUN python3 --version
+
+CMD ["python3", "-u", "proxy.py", "2323"]
 
 ADD proxy.py /app
-
-

@@ -24,6 +24,8 @@ MAX_SECONDS_FOR_GAME = 200
 
 BATTLEFIELD_IMAGE = "battlestar-variablica/battlefield"
 
+ignore_messages = ['WARNING: Your kernel does not support swap limit capabilities or the cgroup is not mounted. Memory limited without swap.']
+
 
 def random_string():
     return base64.b16encode(os.urandom(ID_LENGTH)).decode()[:ID_LENGTH]
@@ -77,7 +79,14 @@ class Container(object):
     def print_loop(self, printf):
         while self.is_running():
             output = os.read(self._masterfd, 1024).decode("UTF-8")
-            print("output:", output, self.is_running())
+            skip = False
+            for message in ignore_messages:
+                if message in output and len(output) <= len(message) * 1.4:
+                    skip = True
+                    break
+            if skip:
+                continue
+            print("output:", repr(output), self.is_running())
             codeoutput = normalize_newlines(output).strip()
             if DO_NOT_PRINT in codeoutput:
                 pass
@@ -195,17 +204,17 @@ class Game(object):
         timer.start()
     
     def stop(self):
-        self.log("30 seconds left.")
-        time.sleep(20)
-        self.log("10 seconds left.")
-        time.sleep(10)
-        self.log("Game stops ...")
         self._round.stop()
         self.log("Game stopped.")
         
     def restart(self):
         try:
             try:
+                self.log("30 seconds left.")
+                time.sleep(20)
+                self.log("10 seconds left.")
+                time.sleep(10)
+                self.log("Game stops ...")
                 self.stop()
             finally:
                 self.start()
@@ -327,6 +336,7 @@ def test_container():
 
 
 if __name__ == "__main__":
+    subprocess.call(["docker", "pull", BATTLEFIELD_IMAGE])
     game = Game()
     HOST = "0.0.0.0"
     PORT = int(sys.argv[1])
@@ -335,4 +345,5 @@ if __name__ == "__main__":
     try:
         server.serve_forever()
     except KeyboardInterrupt:
+        game.stop()
         server.shutdown()
